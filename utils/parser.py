@@ -47,6 +47,7 @@ def parse_arff(arff_file, is_GO=False, is_test=False):
                                     g.add_edge('.'.join(terms[:i]), '.'.join(terms[:i-1]))
                     nodes = sorted(g.nodes(), key=lambda x: (nx.shortest_path_length(g, x, 'root'), x) if is_GO else (len(x.split('.')),x))
                     nodes_idx = dict(zip(nodes, range(len(nodes))))
+                    print(nodes_idx)
                     g_t = g.reverse()
                 else:
                     _, f_name, f_type = l.split()
@@ -77,7 +78,7 @@ def parse_arff(arff_file, is_GO=False, is_test=False):
         X = np.array(X)
         Y = np.stack(Y)
 
-    return X, Y, np.array(nx.adjacency_matrix(g).todense()), nodes, g
+    return X, Y, np.array(nx.adjacency_matrix(g).todense(), nodelist=nodes), nodes, g
 
 
 def initialize_dataset(name, datasets):
