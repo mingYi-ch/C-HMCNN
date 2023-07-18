@@ -255,6 +255,8 @@ def main():
 
         #Move output and label back to cpu to be processed by sklearn
         predicted = predicted.to('cpu')
+
+
         cpu_constrained_output = constrained_output.to('cpu')
         y = y.to('cpu')
 
@@ -267,6 +269,10 @@ def main():
             constr_test = torch.cat((constr_test, cpu_constrained_output), dim=0)
             y_test = torch.cat((y_test, y), dim =0)
 
+    # check #LeafNode
+    id_leaf = [v for v, d in g.out_degree() if d == 0]
+    idx_leaf =  list(map(test.nodes_idx.get, id_leaf))
+    print("#leaf in predicts:", predicted_test[:, idx_leaf].sum(axis=0))
 
     score = average_precision_score(y_test[:,test.to_eval], constr_test.data[:,test.to_eval], average='micro')
 
